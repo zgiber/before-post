@@ -1,559 +1,917 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Post Before You Post</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post Before You Post</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap");
 
-  :root {
-    --ink: #1a1a1a;
-    --paper: #f5f0e8;
-    --rule: #d4c9b5;
-    --yes: #2d6a4f;
-    --yes-light: #d8f3e0;
-    --no: #9b2335;
-    --no-light: #fde8ea;
-    --warn: #b8631a;
-    --warn-light: #fdecd8;
-    --stamp-submit: #2d6a4f;
-    --stamp-cancel: #9b2335;
-    --accent: #4a3728;
-  }
+      :root {
+        --ink: #1a1a1a;
+        --paper: #f5f0e8;
+        --rule: #d4c9b5;
+        --yes: #2d6a4f;
+        --yes-light: #d8f3e0;
+        --no: #9b2335;
+        --no-light: #fde8ea;
+        --warn: #b8631a;
+        --warn-light: #fdecd8;
+        --stamp-submit: #2d6a4f;
+        --stamp-cancel: #9b2335;
+        --accent: #4a3728;
+      }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    min-height: 100vh;
-    padding: 2rem 1rem;
-    background-image:
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 27px,
-        rgba(180,165,140,0.18) 27px,
-        rgba(180,165,140,0.18) 28px
-      );
-  }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--paper);
+        color: var(--ink);
+        min-height: 100vh;
+        padding: 2rem 1rem;
+        background-image: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 27px,
+          rgba(180, 165, 140, 0.18) 27px,
+          rgba(180, 165, 140, 0.18) 28px
+        );
+      }
 
-  .page { max-width: 640px; margin: 0 auto; }
+      .page {
+        max-width: 640px;
+        margin: 0 auto;
+      }
 
-  /* Language toggle */
-  .lang-toggle {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 1rem;
-    gap: 0;
-  }
-  .lang-btn {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.35rem 0.8rem;
-    border: 1.5px solid var(--rule);
-    background: transparent;
-    color: #aaa;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    border-radius: 0;
-  }
-  .lang-btn:first-child { border-radius: 3px 0 0 3px; }
-  .lang-btn:last-child  { border-radius: 0 3px 3px 0; border-left: none; }
-  .lang-btn.active {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-  }
-  .lang-btn:hover:not(.active) {
-    background: #ece7dc;
-    color: var(--ink);
-    transform: none;
-    box-shadow: none;
-  }
+      .lang-toggle {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 1rem;
+        gap: 0;
+      }
+      .lang-btn {
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.35rem 0.8rem;
+        border: 1.5px solid var(--rule);
+        background: transparent;
+        color: #aaa;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        border-radius: 0;
+      }
+      .lang-btn:first-child {
+        border-radius: 3px 0 0 3px;
+      }
+      .lang-btn:last-child {
+        border-radius: 0 3px 3px 0;
+        border-left: none;
+      }
+      .lang-btn.active {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+      }
+      .lang-btn:hover:not(.active) {
+        background: #ece7dc;
+        color: var(--ink);
+        transform: none;
+        box-shadow: none;
+      }
 
-  header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 2px solid var(--rule);
-  }
-  header .eyebrow {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--warn);
-    margin-bottom: 0.5rem;
-  }
-  header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(1.8rem, 5vw, 3rem);
-    line-height: 1.1;
-    color: var(--ink);
-  }
-  header h1 em { font-style: italic; color: var(--accent); }
-  header p {
-    margin-top: 0.75rem;
-    font-size: 0.9rem;
-    color: #666;
-    font-weight: 300;
-  }
+      header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid var(--rule);
+      }
+      header .eyebrow {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--warn);
+        margin-bottom: 0.5rem;
+      }
+      header h1 {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        line-height: 1.1;
+        color: var(--ink);
+      }
+      header h1 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+      header p {
+        margin-top: 0.75rem;
+        font-size: 0.9rem;
+        color: #666;
+        font-weight: 300;
+      }
 
-  .card {
-    background: white;
-    border: 1.5px solid var(--rule);
-    border-radius: 4px;
-    padding: 2rem 2rem 1.5rem;
-    box-shadow: 3px 4px 0 rgba(0,0,0,0.06);
-    animation: slideIn 0.25s ease;
-  }
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+      .card {
+        background: white;
+        border: 1.5px solid var(--rule);
+        border-radius: 4px;
+        padding: 2rem 2rem 1.5rem;
+        box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.06);
+        animation: slideIn 0.25s ease;
+      }
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-  .step-label {
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #999;
-    margin-bottom: 0.6rem;
-  }
-  .question {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.35rem;
-    line-height: 1.4;
-    color: var(--ink);
-    margin-bottom: 0.5rem;
-  }
-  .hint {
-    font-size: 0.82rem;
-    color: #888;
-    font-weight: 300;
-    margin-bottom: 1.5rem;
-    line-height: 1.5;
-  }
+      .step-label {
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #999;
+        margin-bottom: 0.6rem;
+      }
+      .question {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.35rem;
+        line-height: 1.4;
+        color: var(--ink);
+        margin-bottom: 0.5rem;
+      }
+      .hint {
+        font-size: 0.82rem;
+        color: #888;
+        font-weight: 300;
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+      }
 
-  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-  .choices.single { grid-template-columns: 1fr; }
-  .choices.triple  { grid-template-columns: 1fr; }
+      .choices {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+      .choices.single {
+        grid-template-columns: 1fr;
+      }
+      .choices.triple {
+        grid-template-columns: 1fr;
+      }
 
-  button {
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    border: none;
-    border-radius: 3px;
-    padding: 0.85rem 1rem;
-    font-size: 0.88rem;
-    font-weight: 500;
-    transition: all 0.15s ease;
-    text-align: left;
-    line-height: 1.3;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
+      button {
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        border: none;
+        border-radius: 3px;
+        padding: 0.85rem 1rem;
+        font-size: 0.88rem;
+        font-weight: 500;
+        transition: all 0.15s ease;
+        text-align: left;
+        line-height: 1.3;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
 
-  .btn-yes     { background: var(--yes-light); color: var(--yes); border: 1.5px solid #a8d8bc; }
-  .btn-yes:hover { background: #c2ead4; transform: translateY(-1px); box-shadow: 0 3px 8px rgba(45,106,79,.15); }
+      .btn-yes {
+        background: var(--yes-light);
+        color: var(--yes);
+        border: 1.5px solid #a8d8bc;
+      }
+      .btn-yes:hover {
+        background: #c2ead4;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(45, 106, 79, 0.15);
+      }
+      .btn-no {
+        background: var(--no-light);
+        color: var(--no);
+        border: 1.5px solid #f0b8bf;
+      }
+      .btn-no:hover {
+        background: #fad0d4;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(155, 35, 53, 0.15);
+      }
+      .btn-warn {
+        background: var(--warn-light);
+        color: var(--warn);
+        border: 1.5px solid #f0c8a0;
+      }
+      .btn-warn:hover {
+        background: #fddfc0;
+        transform: translateY(-1px);
+      }
+      .btn-neutral {
+        background: #f0ece5;
+        color: #555;
+        border: 1.5px solid #ddd6c8;
+      }
+      .btn-neutral:hover {
+        background: #e5e0d8;
+        transform: translateY(-1px);
+      }
 
-  .btn-no      { background: var(--no-light); color: var(--no); border: 1.5px solid #f0b8bf; }
-  .btn-no:hover { background: #fad0d4; transform: translateY(-1px); box-shadow: 0 3px 8px rgba(155,35,53,.15); }
+      .outcome {
+        text-align: center;
+        padding: 2.5rem 2rem;
+        animation: slideIn 0.3s ease;
+      }
+      .stamp {
+        display: inline-block;
+        font-family: "DM Serif Display", serif;
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        padding: 0.4rem 1.4rem;
+        border-radius: 4px;
+        border: 3px solid;
+        margin-bottom: 1.2rem;
+        transform: rotate(-2deg);
+        box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.1);
+      }
+      .stamp.submit {
+        color: var(--stamp-submit);
+        border-color: var(--stamp-submit);
+        background: var(--yes-light);
+      }
+      .stamp.cancel {
+        color: var(--stamp-cancel);
+        border-color: var(--stamp-cancel);
+        background: var(--no-light);
+      }
+      .stamp.pause {
+        color: var(--warn);
+        border-color: var(--warn);
+        background: var(--warn-light);
+      }
 
-  .btn-warn    { background: var(--warn-light); color: var(--warn); border: 1.5px solid #f0c8a0; }
-  .btn-warn:hover { background: #fddfc0; transform: translateY(-1px); }
+      .outcome-title {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.3rem;
+        margin-bottom: 0.6rem;
+      }
+      .outcome-body {
+        font-size: 0.88rem;
+        color: #666;
+        line-height: 1.65;
+        max-width: 400px;
+        margin: 0 auto 1.5rem;
+      }
 
-  .btn-neutral { background: #f0ece5; color: #555; border: 1.5px solid #ddd6c8; }
-  .btn-neutral:hover { background: #e5e0d8; transform: translateY(-1px); }
+      .restart-btn {
+        font-family: "DM Sans", sans-serif;
+        background: none;
+        border: 1.5px solid var(--rule);
+        color: #888;
+        border-radius: 3px;
+        padding: 0.6rem 1.4rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+        letter-spacing: 0.05em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .restart-btn:hover {
+        border-color: #999;
+        color: var(--ink);
+        background: none;
+        transform: none;
+        box-shadow: none;
+      }
 
-  .outcome { text-align: center; padding: 2.5rem 2rem; animation: slideIn 0.3s ease; }
+      .progress-bar {
+        height: 3px;
+        background: var(--rule);
+        border-radius: 2px;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 2px;
+        transition: width 0.4s ease;
+      }
 
-  .stamp {
-    display: inline-block;
-    font-family: 'DM Serif Display', serif;
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    padding: 0.4rem 1.4rem;
-    border-radius: 4px;
-    border: 3px solid;
-    margin-bottom: 1.2rem;
-    transform: rotate(-2deg);
-    box-shadow: 2px 3px 0 rgba(0,0,0,0.1);
-  }
-  .stamp.submit { color: var(--stamp-submit); border-color: var(--stamp-submit); background: var(--yes-light); }
-  .stamp.cancel { color: var(--stamp-cancel); border-color: var(--stamp-cancel); background: var(--no-light); }
-  .stamp.pause  { color: var(--warn); border-color: var(--warn); background: var(--warn-light); }
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.75rem;
+        color: #aaa;
+        cursor: pointer;
+        margin-top: 1.2rem;
+        background: none;
+        border: none;
+        padding: 0;
+        font-family: "DM Sans", sans-serif;
+      }
+      .back-link:hover {
+        color: #666;
+        transform: none;
+        box-shadow: none;
+        background: none;
+      }
 
-  .outcome-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 0.6rem; }
-  .outcome-body  { font-size: 0.88rem; color: #666; line-height: 1.65; max-width: 400px; margin: 0 auto 1.5rem; }
+      footer {
+        text-align: center;
+        margin-top: 2.5rem;
+        font-size: 0.72rem;
+        color: #bbb;
+        letter-spacing: 0.05em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="btn-en" onclick="setLang('en')">
+          EN
+        </button>
+        <button class="lang-btn" id="btn-hu" onclick="setLang('hu')">HU</button>
+      </div>
+      <header>
+        <div class="eyebrow" id="hdr-eyebrow">Social Media Sanity Check</div>
+        <h1 id="hdr-title">Post Before You <em>Post</em></h1>
+        <p id="hdr-sub">
+          A quick guide to keeping your feed constructive and drama-free.
+        </p>
+      </header>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress" style="width: 0%"></div>
+      </div>
+      <div id="card-container"></div>
+      <footer id="footer-text">
+        Think before you post · Spread signal, not noise
+      </footer>
+    </div>
+    <script>
+      const ui = {
+        en: {
+          eyebrow: "Social Media Sanity Check",
+          title: "Post Before You <em>Post</em>",
+          sub: "A quick guide to keeping your feed constructive and drama-free.",
+          footer: "Think before you post · Spread signal, not noise",
+          stampSubmit: "✓ SUBMIT",
+          stampPause: "⏸ PAUSE",
+          stampCancel: "✕ CANCEL",
+          restart: "↩ Start over",
+          back: "← Go back",
+        },
+        hu: {
+          eyebrow: "Közösségi Média Ellenőrzés",
+          title: "Gondold meg, <em>mielőtt</em> posztolsz",
+          sub: "Egy gyors útmutató, hogy a feedeed konstruktív és dráma-mentes maradjon.",
+          footer: "Gondolkodj mielőtt posztolsz · Adj értéket, ne zajt",
+          stampSubmit: "✓ POSZTOLJ",
+          stampPause: "⏸ VÁRJ",
+          stampCancel: "✕ TÖRÖLD",
+          restart: "↩ Kezdd újra",
+          back: "← Vissza",
+        },
+      };
+      const trees = {
+        en: {
+          start: {
+            step: "Step 1 of 7",
+            question:
+              "Does this post contain political content, or opinions about politicians, parties, or policies?",
+            hint: "This includes elections, laws, government decisions, and social justice debates.",
+            choices: [
+              {
+                label: "✅ No, it's not political",
+                style: "yes",
+                next: "personal_attack",
+              },
+              {
+                label: "⚠️ Yes, it's political",
+                style: "warn",
+                next: "political_check",
+              },
+            ],
+          },
+          political_check: {
+            step: "Step 2 of 7",
+            question:
+              "Are you sharing a verified fact, or your own opinion / reaction?",
+            hint: "Facts can be checked and sourced. Opinions are personal interpretations — and tend to invite debate.",
+            choices: [
+              {
+                label: "📰 A verified, sourced fact",
+                style: "neutral",
+                next: "sourced",
+              },
+              {
+                label: "💬 My opinion or reaction",
+                style: "warn",
+                next: "opinion_outcome",
+              },
+            ],
+          },
+          sourced: {
+            step: "Step 3 of 7",
+            question:
+              "Could a reasonable person on the opposite side feel attacked, mocked, or insulted by this post?",
+            hint: "Imagine your most politically different friend reading it. Would it make them feel disrespected?",
+            choices: [
+              {
+                label: "No, it's respectful",
+                style: "yes",
+                next: "constructive",
+              },
+              {
+                label: "Probably yes",
+                style: "no",
+                next: "antagonise_outcome",
+              },
+            ],
+          },
+          personal_attack: {
+            step: "Step 2 of 7",
+            question:
+              "Does this post criticise, mock, or call out a specific real person by name?",
+            hint: "Includes celebrities, politicians, colleagues, or anyone identifiable.",
+            choices: [
+              {
+                label: "No, it's not about a person",
+                style: "yes",
+                next: "emotional_state",
+              },
+              {
+                label: "Yes, it names someone",
+                style: "no",
+                next: "attack_check",
+              },
+            ],
+          },
+          attack_check: {
+            step: "Step 3 of 7",
+            question:
+              "Is the criticism based on their public actions and accompanied by evidence?",
+            hint: "Constructive critique of public figures is fair. Personal attacks and mockery rarely add value.",
+            choices: [
+              {
+                label: "Yes, factual and evidenced",
+                style: "neutral",
+                next: "emotional_state",
+              },
+              {
+                label: "No, more of an attack or rant",
+                style: "no",
+                next: "attack_outcome",
+              },
+            ],
+          },
+          emotional_state: {
+            step: "Step 4 of 7",
+            question: "What's your emotional state right now?",
+            hint: "Posts drafted in anger, frustration, or outrage often land differently than intended.",
+            choices: [
+              {
+                label: "😌 Calm and measured",
+                style: "yes",
+                next: "constructive",
+              },
+              {
+                label: "😤 Frustrated or angry",
+                style: "warn",
+                next: "anger_check",
+              },
+              {
+                label: "😢 Upset or reactive",
+                style: "no",
+                next: "anger_outcome",
+              },
+            ],
+          },
+          anger_check: {
+            step: "Step 5 of 7",
+            question:
+              "Have you re-read this post after stepping away for at least 10 minutes?",
+            hint: "A short pause often reveals a sharper, calmer version of what you actually want to say.",
+            choices: [
+              {
+                label: "Yes, I reviewed it later",
+                style: "yes",
+                next: "constructive",
+              },
+              {
+                label: "No, posting in the moment",
+                style: "no",
+                next: "cool_down_outcome",
+              },
+            ],
+          },
+          constructive: {
+            step: "Step 6 of 7",
+            question:
+              "Does this post add something useful — insight, a resource, a genuine question, or positive news?",
+            hint: "Content that informs, connects, or uplifts tends to serve your audience better than venting.",
+            choices: [
+              {
+                label: "Yes, it adds value",
+                style: "yes",
+                next: "final_check",
+              },
+              {
+                label: "Not really — just venting",
+                style: "warn",
+                next: "vent_outcome",
+              },
+            ],
+          },
+          final_check: {
+            step: "Step 7 of 7",
+            question:
+              "Would you be comfortable if your employer, family, or anyone you respect saw this post?",
+            hint: "The internet is long. Once it's out, it's out.",
+            choices: [
+              {
+                label: "Yes, completely fine",
+                style: "yes",
+                next: "submit_outcome",
+              },
+              {
+                label: "I'd rather they didn't",
+                style: "no",
+                next: "privacy_outcome",
+              },
+            ],
+          },
+          submit_outcome: {
+            outcome: true,
+            type: "submit",
+            title: "Looks good — go ahead and post it.",
+            body: "Your post passed the check. It's calm, constructive, and something you can stand behind. Post with confidence.",
+          },
+          opinion_outcome: {
+            outcome: true,
+            type: "cancel",
+            title: "Consider sitting this one out.",
+            body: "Political opinions on social media rarely change minds — they mostly invite conflict. Ask yourself: is there a more constructive way to express this, or a better venue for this conversation?",
+          },
+          antagonise_outcome: {
+            outcome: true,
+            type: "cancel",
+            title: "Hold off on this one.",
+            body: "Even factual posts can be framed in ways that antagonise. Try rewriting it so your political opposite could still read it without feeling dismissed. If that's impossible, it may not be worth posting.",
+          },
+          attack_outcome: {
+            outcome: true,
+            type: "cancel",
+            title: "Don't post this.",
+            body: "Personal attacks — even on public figures — tend to reflect more on the poster than the target. If you have a genuine point to make, strip the emotion and stick to facts.",
+          },
+          anger_outcome: {
+            outcome: true,
+            type: "pause",
+            title: "Step away first.",
+            body: "Posting from a reactive emotional state almost always leads to regret. Write it if you need to get it out — but save it as a draft and come back in an hour. You might surprise yourself.",
+          },
+          cool_down_outcome: {
+            outcome: true,
+            type: "pause",
+            title: "Take 10 minutes before posting.",
+            body: "You're not wrong for feeling this way — but posting right now increases the risk of saying something you'll want to delete later. Set a timer, do something else, then re-read with fresh eyes.",
+          },
+          vent_outcome: {
+            outcome: true,
+            type: "cancel",
+            title: "This might not need an audience.",
+            body: "Venting publicly can feel cathartic in the moment but often attracts pile-ons or drains your own energy. Consider a private journal, a close friend, or simply not posting.",
+          },
+          privacy_outcome: {
+            outcome: true,
+            type: "cancel",
+            title: "If you'd hide it, don't share it.",
+            body: "That instinct is worth listening to. Posts that pass the 'would I be fine if anyone saw this?' test are the ones you can post without anxiety. Revise or skip this one.",
+          },
+        },
+        hu: {
+          start: {
+            step: "1. lépés / 7",
+            question:
+              "Ez a poszt politikai tartalmat tartalmaz, vagy véleményt politikusokról, pártokról, közpolitikáról?",
+            hint: "Ide tartoznak a választások, törvények, kormánydöntések és társadalmi viták is.",
+            choices: [
+              {
+                label: "✅ Nem, nem politikai",
+                style: "yes",
+                next: "personal_attack",
+              },
+              {
+                label: "⚠️ Igen, politikai témájú",
+                style: "warn",
+                next: "political_check",
+              },
+            ],
+          },
+          political_check: {
+            step: "2. lépés / 7",
+            question:
+              "Ellenőrzött tényt osztasz meg, vagy a saját véleményedet / reakciódat?",
+            hint: "A tények utánanézhetők és forrásokkal alátámaszthatók. A vélemények személyes értelmezések — és általában vitát szülnek.",
+            choices: [
+              {
+                label: "📰 Ellenőrzött, forrással alátámasztott tény",
+                style: "neutral",
+                next: "sourced",
+              },
+              {
+                label: "💬 A saját véleményem vagy reakcióm",
+                style: "warn",
+                next: "opinion_outcome",
+              },
+            ],
+          },
+          sourced: {
+            step: "3. lépés / 7",
+            question:
+              "Érezheti-e úgy egy ellentétes nézetet valló, ésszerű személy, hogy ez a poszt megtámadja, kigúnyolja vagy megsérti őt?",
+            hint: "Képzeld el, hogy a leginkább politikailag különböző ismerősöd olvassa. Tiszteletlennek érezné?",
+            choices: [
+              {
+                label: "Nem, tiszteletteljes",
+                style: "yes",
+                next: "constructive",
+              },
+              {
+                label: "Valószínűleg igen",
+                style: "no",
+                next: "antagonise_outcome",
+              },
+            ],
+          },
+          personal_attack: {
+            step: "2. lépés / 7",
+            question:
+              "Ez a poszt kritizál, kigúnyol vagy nevén nevez egy konkrét, valós személyt?",
+            hint: "Ide tartoznak hírességek, politikusok, kollégák vagy bármely azonosítható személy.",
+            choices: [
+              {
+                label: "Nem, nem egy személyről szól",
+                style: "yes",
+                next: "emotional_state",
+              },
+              {
+                label: "Igen, megnevez valakit",
+                style: "no",
+                next: "attack_check",
+              },
+            ],
+          },
+          attack_check: {
+            step: "3. lépés / 7",
+            question:
+              "A kritika az illető nyilvános cselekedetein alapul, és bizonyítékkal is alátámasztott?",
+            hint: "Közszereplők konstruktív bírálata jogos. A személyes támadások és gúnyolódás ritkán adnak hozzá bármit.",
+            choices: [
+              {
+                label: "Igen, tényszerű és bizonyított",
+                style: "neutral",
+                next: "emotional_state",
+              },
+              {
+                label: "Nem, inkább támadás vagy kirohanás",
+                style: "no",
+                next: "attack_outcome",
+              },
+            ],
+          },
+          emotional_state: {
+            step: "4. lépés / 7",
+            question: "Milyen érzelmi állapotban vagy most?",
+            hint: "A dühből, frusztrációból vagy felháborodásból írt posztok gyakran másképp hatnak, mint szántuk.",
+            choices: [
+              {
+                label: "😌 Nyugodt és megfontolt",
+                style: "yes",
+                next: "constructive",
+              },
+              {
+                label: "😤 Frusztrált vagy mérges",
+                style: "warn",
+                next: "anger_check",
+              },
+              {
+                label: "😢 Felzaklatott vagy reaktív",
+                style: "no",
+                next: "anger_outcome",
+              },
+            ],
+          },
+          anger_check: {
+            step: "5. lépés / 7",
+            question: "Újraolvastál a posztot legalább 10 perces szünet után?",
+            hint: "Egy rövid szünet után sokszor egy élesebb, nyugodtabb változat kerül elő abból, amit valójában mondani akarsz.",
+            choices: [
+              {
+                label: "Igen, később újraolvastam",
+                style: "yes",
+                next: "constructive",
+              },
+              {
+                label: "Nem, az adott pillanatban posztolnék",
+                style: "no",
+                next: "cool_down_outcome",
+              },
+            ],
+          },
+          constructive: {
+            step: "6. lépés / 7",
+            question:
+              "Ad-e ez a poszt valami hasznosat — betekintést, forrást, valódi kérdést vagy pozitív hírt?",
+            hint: "A tájékoztató, összekötő vagy felemelő tartalom általában jobban szolgálja a közönséget, mint a panaszkodás.",
+            choices: [
+              { label: "Igen, értéket ad", style: "yes", next: "final_check" },
+              {
+                label: "Nem igazán — csak panasz",
+                style: "warn",
+                next: "vent_outcome",
+              },
+            ],
+          },
+          final_check: {
+            step: "7. lépés / 7",
+            question:
+              "Kényelmetlenül éreznéd-e magad, ha a munkáltatód, a családod vagy egy általad tisztelt személy látná ezt a posztot?",
+            hint: "Az internet hosszú. Ha egyszer kint van, kint van.",
+            choices: [
+              {
+                label: "Nem, teljesen rendben van",
+                style: "yes",
+                next: "submit_outcome",
+              },
+              {
+                label: "Inkább ne lássák",
+                style: "no",
+                next: "privacy_outcome",
+              },
+            ],
+          },
+          submit_outcome: {
+            outcome: true,
+            type: "submit",
+            title: "Rendben van — nyugodtan posztolhatod.",
+            body: "A posztod átment az ellenőrzésen. Nyugodt, konstruktív, és ki is állhatsz mellette. Posztolj magabiztosan.",
+          },
+          opinion_outcome: {
+            outcome: true,
+            type: "cancel",
+            title: "Fontold meg, hogy kihagyod ezt.",
+            body: "A politikai vélemények a közösségi médiában ritkán változtatnak meg senkit — főleg csak konfliktust szülnek. Kérdezd meg magadtól: van-e konstruktívabb mód ennek kifejezésére, vagy jobb helyszín erre a beszélgetésre?",
+          },
+          antagonise_outcome: {
+            outcome: true,
+            type: "cancel",
+            title: "Várj ezzel.",
+            body: "Még a tényszeri posztok is keretezhetők úgy, hogy provokálnak. Próbáld átírni úgy, hogy egy ellentétes nézetű személy is el tudja olvasni anélkül, hogy lesöpörtnek érezné magát. Ha ez lehetetlen, talán nem érdemes posztolni.",
+          },
+          attack_outcome: {
+            outcome: true,
+            type: "cancel",
+            title: "Ne poszold ezt.",
+            body: "A személyes támadások — még közszereplőkkel szemben is — általában többet mondanak a posztolóról, mint a célpontról. Ha valódi mondanivalód van, hagyd el az érzelmeket és ragaszkodj a tényekhez.",
+          },
+          anger_outcome: {
+            outcome: true,
+            type: "pause",
+            title: "Először lépj egyet hátra.",
+            body: "A reaktív érzelmi állapotból posztolni szinte mindig megbánáshoz vezet. Írd le, ha ki kell adnod magadból — de mentsd el vázlatként, és egy óra múlva térj vissza. Lehet, hogy meglepődsz.",
+          },
+          cool_down_outcome: {
+            outcome: true,
+            type: "pause",
+            title: "Várj 10 percet, mielőtt posztolsz.",
+            body: "Nem vagy rossz, amiért így érzel — de most posztolni növeli annak kockázatát, hogy olyat mondj, amit később törölni akarsz. Állíts be egy időzítőt, csinálj valami mást, majd friss szemmel olvasd újra.",
+          },
+          vent_outcome: {
+            outcome: true,
+            type: "cancel",
+            title: "Ennek talán nem kell közönség.",
+            body: "A nyilvános panaszkodás pillanatnyilag felszabadítónak tűnhet, de sokszor negatív reakciókat vonz, vagy lemeríti a saját energiádat. Fontold meg a naplóírást, egy közeli barátot, vagy egyszerűen a nem posztolást.",
+          },
+          privacy_outcome: {
+            outcome: true,
+            type: "cancel",
+            title: "Ha elrejtenéd, ne oszd meg.",
+            body: "Érdemes hallgatni erre az ösztönre. Azok a posztok, amelyek átmennek a 'rendben lenne, ha bárki látná?' teszten, azok amelyeket szorongás nélkül posztolhatsz. Írd át vagy hagyd ki ezt.",
+          },
+        },
+      };
 
-  .restart-btn {
-    font-family: 'DM Sans', sans-serif;
-    background: none;
-    border: 1.5px solid var(--rule);
-    color: #888;
-    border-radius: 3px;
-    padding: 0.6rem 1.4rem;
-    font-size: 0.8rem;
-    cursor: pointer;
-    letter-spacing: 0.05em;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  .restart-btn:hover { border-color: #999; color: var(--ink); background: none; transform: none; box-shadow: none; }
+      const browserLang = (
+        navigator.language ||
+        navigator.userLanguage ||
+        "en"
+      ).toLowerCase();
+      let lang = browserLang.startsWith("hu") ? "hu" : "en";
+      let history = [];
+      let currentNode = "start";
+      const steps = [
+        "start",
+        "political_check",
+        "sourced",
+        "personal_attack",
+        "attack_check",
+        "emotional_state",
+        "anger_check",
+        "constructive",
+        "final_check",
+      ];
 
-  .progress-bar { height: 3px; background: var(--rule); border-radius: 2px; margin-bottom: 1.5rem; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.4s ease; }
+      function getProgress(nodeId) {
+        const idx = steps.indexOf(nodeId);
+        return idx === -1 ? 100 : Math.round((idx / (steps.length - 1)) * 100);
+      }
 
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-size: 0.75rem;
-    color: #aaa;
-    cursor: pointer;
-    margin-top: 1.2rem;
-    background: none;
-    border: none;
-    padding: 0;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .back-link:hover { color: #666; transform: none; box-shadow: none; background: none; }
+      function setLang(l) {
+        lang = l;
+        document
+          .getElementById("btn-en")
+          .classList.toggle("active", l === "en");
+        document
+          .getElementById("btn-hu")
+          .classList.toggle("active", l === "hu");
+        const t = ui[l];
+        document.getElementById("hdr-eyebrow").textContent = t.eyebrow;
+        document.getElementById("hdr-title").innerHTML = t.title;
+        document.getElementById("hdr-sub").textContent = t.sub;
+        document.getElementById("footer-text").textContent = t.footer;
+        render(currentNode);
+      }
 
-  footer { text-align: center; margin-top: 2.5rem; font-size: 0.72rem; color: #bbb; letter-spacing: 0.05em; }
-</style>
-</head>
-<body>
-<div class="page">
+      function render(nodeId) {
+        currentNode = nodeId;
+        const node = trees[lang][nodeId];
+        const container = document.getElementById("card-container");
+        const progressEl = document.getElementById("progress");
+        const t = ui[lang];
 
-  <div class="lang-toggle">
-    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
-    <button class="lang-btn"        id="btn-hu" onclick="setLang('hu')">HU</button>
-  </div>
+        if (node.outcome) {
+          progressEl.style.width = "100%";
+          const stampText =
+            node.type === "submit"
+              ? t.stampSubmit
+              : node.type === "pause"
+                ? t.stampPause
+                : t.stampCancel;
+          container.innerHTML = `<div class="card outcome"><div class="stamp ${node.type}">${stampText}</div><div class="outcome-title">${node.title}</div><p class="outcome-body">${node.body}</p><button class="restart-btn" onclick="restart()">${t.restart}</button></div>`;
+          return;
+        }
 
-  <header>
-    <div class="eyebrow" id="hdr-eyebrow">Social Media Sanity Check</div>
-    <h1 id="hdr-title">Post Before You <em>Post</em></h1>
-    <p id="hdr-sub">A quick guide to keeping your feed constructive and drama-free.</p>
-  </header>
+        progressEl.style.width = getProgress(nodeId) + "%";
+        const tripleClass =
+          node.choices.length === 3
+            ? "triple"
+            : node.choices.length === 1
+              ? "single"
+              : "";
+        const choiceButtons = node.choices
+          .map(
+            (c) =>
+              `<button class="btn-${c.style}" onclick="go('${c.next}','${nodeId}')">${c.label}</button>`,
+          )
+          .join("");
+        const backBtn =
+          history.length > 0
+            ? `<button class="back-link" onclick="goBack()">← ${lang === "hu" ? "Vissza" : "Go back"}</button>`
+            : "";
 
-  <div class="progress-bar">
-    <div class="progress-fill" id="progress" style="width: 0%"></div>
-  </div>
+        container.innerHTML = `<div class="card"><div class="step-label">${node.step}</div><div class="question">${node.question}</div><p class="hint">${node.hint}</p><div class="choices ${tripleClass}">${choiceButtons}</div>${backBtn}</div>`;
+      }
 
-  <div id="card-container"></div>
+      function go(nodeId, fromId) {
+        history.push(fromId);
+        render(nodeId);
+      }
+      function goBack() {
+        const prev = history.pop();
+        if (prev) render(prev);
+      }
+      function restart() {
+        history = [];
+        render("start");
+      }
 
-  <footer id="footer-text">Think before you post · Spread signal, not noise</footer>
-</div>
-
-<script>
-// ─── TRANSLATIONS ────────────────────────────────────────────────────────────
-const ui = {
-  en: {
-    eyebrow: "Social Media Sanity Check",
-    title: 'Post Before You <em>Post</em>',
-    sub: "A quick guide to keeping your feed constructive and drama-free.",
-    footer: "Think before you post · Spread signal, not noise",
-    stampSubmit: "✓ SUBMIT",
-    stampPause:  "⏸ PAUSE",
-    stampCancel: "✕ CANCEL",
-    restart: "↩ Start over",
-    back: "← Go back",
-  },
-  hu: {
-    eyebrow: "Közösségi Média Ellenőrzés",
-    title: 'Gondold meg, <em>mielőtt</em> posztolsz',
-    sub: "Egy gyors útmutató, hogy a feeded konstruktív és drámamentes maradjon.",
-    footer: "Gondolkodj, mielőtt posztolsz · Adj értéket, ne zajt",
-    stampSubmit: "✓ POSZTOLJ",
-    stampPause:  "⏸ VÁRJ",
-    stampCancel: "✕ TÖRÖLD",
-    restart: "↩ Kezdd újra",
-    back: "← Vissza",
-  }
-};
-
-// ─── DECISION TREES ──────────────────────────────────────────────────────────
-const trees = {
-  en: {
-    start: {
-      step: "Step 1 of 7",
-      question: "Does this post contain political content, or opinions about politicians, parties, or policies?",
-      hint: "This includes elections, laws, government decisions, and social justice debates.",
-      choices: [
-        { label: "✅ No, it's not political", style: "yes", next: "personal_attack" },
-        { label: "⚠️ Yes, it's political",   style: "warn", next: "political_check" }
-      ]
-    },
-    political_check: {
-      step: "Step 2 of 7",
-      question: "Are you sharing a verified fact, or your own opinion / reaction?",
-      hint: "Facts can be checked and sourced. Opinions are personal interpretations — and tend to invite debate.",
-      choices: [
-        { label: "📰 A verified, sourced fact", style: "neutral", next: "sourced" },
-        { label: "💬 My opinion or reaction",   style: "warn",    next: "opinion_outcome" }
-      ]
-    },
-    sourced: {
-      step: "Step 3 of 7",
-      question: "Could a reasonable person on the opposite side feel attacked, mocked, or insulted by this post?",
-      hint: "Imagine your most politically different friend reading it. Would it make them feel disrespected?",
-      choices: [
-        { label: "No, it's respectful", style: "yes", next: "constructive" },
-        { label: "Probably yes",        style: "no",  next: "antagonise_outcome" }
-      ]
-    },
-    personal_attack: {
-      step: "Step 2 of 7",
-      question: "Does this post criticise, mock, or call out a specific real person by name?",
-      hint: "Includes celebrities, politicians, colleagues, or anyone identifiable.",
-      choices: [
-        { label: "No, it's not about a person", style: "yes", next: "emotional_state" },
-        { label: "Yes, it names someone",        style: "no",  next: "attack_check" }
-      ]
-    },
-    attack_check: {
-      step: "Step 3 of 7",
-      question: "Is the criticism based on their public actions and accompanied by evidence?",
-      hint: "Constructive critique of public figures is fair. Personal attacks and mockery rarely add value.",
-      choices: [
-        { label: "Yes, factual and evidenced",   style: "neutral", next: "emotional_state" },
-        { label: "No, more of an attack or rant", style: "no",     next: "attack_outcome" }
-      ]
-    },
-    emotional_state: {
-      step: "Step 4 of 7",
-      question: "What's your emotional state right now?",
-      hint: "Posts drafted in anger, frustration, or outrage often land differently than intended.",
-      choices: [
-        { label: "😌 Calm and measured",  style: "yes",  next: "constructive" },
-        { label: "😤 Frustrated or angry", style: "warn", next: "anger_check" },
-        { label: "😢 Upset or reactive",  style: "no",   next: "anger_outcome" }
-      ]
-    },
-    anger_check: {
-      step: "Step 5 of 7",
-      question: "Have you re-read this post after stepping away for at least 10 minutes?",
-      hint: "A short pause often reveals a sharper, calmer version of what you actually want to say.",
-      choices: [
-        { label: "Yes, I reviewed it later",  style: "yes", next: "constructive" },
-        { label: "No, posting in the moment", style: "no",  next: "cool_down_outcome" }
-      ]
-    },
-    constructive: {
-      step: "Step 6 of 7",
-      question: "Does this post add something useful — insight, a resource, a genuine question, or positive news?",
-      hint: "Content that informs, connects, or uplifts tends to serve your audience better than venting.",
-      choices: [
-        { label: "Yes, it adds value",       style: "yes",  next: "final_check" },
-        { label: "Not really — just venting", style: "warn", next: "vent_outcome" }
-      ]
-    },
-    final_check: {
-      step: "Step 7 of 7",
-      question: "Would you be comfortable if your employer, family, or anyone you respect saw this post?",
-      hint: "The internet is long. Once it's out, it's out.",
-      choices: [
-        { label: "Yes, completely fine",    style: "yes", next: "submit_outcome" },
-        { label: "I'd rather they didn't", style: "no",  next: "privacy_outcome" }
-      ]
-    },
-    submit_outcome:    { outcome: true, type: "submit", title: "Looks good — go ahead and post it.",    body: "Your post passed the check. It's calm, constructive, and something you can stand behind. Post with confidence." },
-    opinion_outcome:   { outcome: true, type: "cancel", title: "Consider sitting this one out.",        body: "Political opinions on social media rarely change minds — they mostly invite conflict. Ask yourself: is there a more constructive way to express this, or a better venue for this conversation?" },
-    antagonise_outcome:{ outcome: true, type: "cancel", title: "Hold off on this one.",                 body: "Even factual posts can be framed in ways that antagonise. Try rewriting it so your political opposite could still read it without feeling dismissed. If that's impossible, it may not be worth posting." },
-    attack_outcome:    { outcome: true, type: "cancel", title: "Don't post this.",                      body: "Personal attacks — even on public figures — tend to reflect more on the poster than the target. If you have a genuine point to make, strip the emotion and stick to facts." },
-    anger_outcome:     { outcome: true, type: "pause",  title: "Step away first.",                      body: "Posting from a reactive emotional state almost always leads to regret. Write it if you need to get it out — but save it as a draft and come back in an hour. You might surprise yourself." },
-    cool_down_outcome: { outcome: true, type: "pause",  title: "Take 10 minutes before posting.",       body: "You're not wrong for feeling this way — but posting right now increases the risk of saying something you'll want to delete later. Set a timer, do something else, then re-read with fresh eyes." },
-    vent_outcome:      { outcome: true, type: "cancel", title: "This might not need an audience.",       body: "Venting publicly can feel cathartic in the moment but often attracts pile-ons or drains your own energy. Consider a private journal, a close friend, or simply not posting." },
-    privacy_outcome:   { outcome: true, type: "cancel", title: "If you'd hide it, don't share it.",     body: "That instinct is worth listening to. Posts that pass the 'would I be fine if anyone saw this?' test are the ones you can post without anxiety. Revise or skip this one." }
-  },
-
-  hu: {
-    start: {
-      step: "1. lépés / 7",
-      question: "Ez a poszt politikai tartalmat tartalmaz, vagy véleményt politikusokról, pártokról, közpolitikáról?",
-      hint: "Ide tartoznak a választások, törvények, kormánydöntések és társadalmi viták is.",
-      choices: [
-        { label: "✅ Nem, nem politikai",  style: "yes",  next: "personal_attack" },
-        { label: "⚠️ Igen, politikai témájú", style: "warn", next: "political_check" }
-      ]
-    },
-    political_check: {
-      step: "2. lépés / 7",
-      question: "Ellenőrzött tényt osztasz meg, vagy a saját véleményedet / reakciódat?",
-      hint: "A tények utánanézhetők és forrásokkal alátámaszthatók. A vélemények személyes értelmezések — és általában vitát szülnek.",
-      choices: [
-        { label: "📰 Ellenőrzött, forrással alátámasztott tény", style: "neutral", next: "sourced" },
-        { label: "💬 A saját véleményem vagy reakcióm",          style: "warn",    next: "opinion_outcome" }
-      ]
-    },
-    sourced: {
-      step: "3. lépés / 7",
-      question: "Érezheti-e úgy egy ellentétes nézetet valló, ésszerű személy, hogy ez a poszt megtámadja, kigúnyolja vagy megsérti őt?",
-      hint: "Képzeld el, hogy a leginkább politikailag különböző ismerősöd olvassa. Tiszteletlennek érezné?",
-      choices: [
-        { label: "Nem, tiszteletteljes",  style: "yes", next: "constructive" },
-        { label: "Valószínűleg igen",     style: "no",  next: "antagonise_outcome" }
-      ]
-    },
-    personal_attack: {
-      step: "2. lépés / 7",
-      question: "Ez a poszt kritizál, kigúnyol vagy nevén nevez egy konkrét, valós személyt?",
-      hint: "Ide tartoznak hírességek, politikusok, kollégák vagy bármely azonosítható személy.",
-      choices: [
-        { label: "Nem, nem egy személyről szól", style: "yes", next: "emotional_state" },
-        { label: "Igen, megnevez valakit",        style: "no",  next: "attack_check" }
-      ]
-    },
-    attack_check: {
-      step: "3. lépés / 7",
-      question: "A kritika az illető nyilvános cselekedetein alapul, és bizonyítékkal is alátámasztott?",
-      hint: "Közszereplők konstruktív bírálata jogos. A személyes támadások és gúnyolódás ritkán adnak hozzá bármit.",
-      choices: [
-        { label: "Igen, tényszerű és bizonyított",     style: "neutral", next: "emotional_state" },
-        { label: "Nem, inkább támadás vagy kirohanás", style: "no",      next: "attack_outcome" }
-      ]
-    },
-    emotional_state: {
-      step: "4. lépés / 7",
-      question: "Milyen érzelmi állapotban vagy most?",
-      hint: "A dühből, frusztrációból vagy felháborodásból írt posztok gyakran másképp hatnak, mint szántuk.",
-      choices: [
-        { label: "😌 Nyugodt és megfontolt",     style: "yes",  next: "constructive" },
-        { label: "😤 Frusztrált vagy mérges",    style: "warn", next: "anger_check" },
-        { label: "😢 Felzaklatott vagy reaktív", style: "no",   next: "anger_outcome" }
-      ]
-    },
-    anger_check: {
-      step: "5. lépés / 7",
-      question: "Újraolvastad a posztot legalább 10 perces szünet után?",
-      hint: "Egy rövid szünet után sokszor egy élesebb, nyugodtabb változat kerül elő abból, amit valójában mondani akarsz.",
-      choices: [
-        { label: "Igen, később újraolvastam",        style: "yes", next: "constructive" },
-        { label: "Nem, az adott pillanatban posztolnék", style: "no",  next: "cool_down_outcome" }
-      ]
-    },
-    constructive: {
-      step: "6. lépés / 7",
-      question: "Ad-e ez a poszt valami hasznosat — betekintést, forrást, valódi kérdést vagy pozitív hírt?",
-      hint: "A tájékoztató, összekötő vagy felemelő tartalom általában jobban szolgálja a közönséget, mint a panaszkodás.",
-      choices: [
-        { label: "Igen, értéket ad",        style: "yes",  next: "final_check" },
-        { label: "Nem igazán — csak panasz", style: "warn", next: "vent_outcome" }
-      ]
-    },
-    final_check: {
-      step: "7. lépés / 7",
-      question: "Kényelmetlenül éreznéd-e magad, ha a munkáltatód, a családod vagy egy általad tisztelt személy látná ezt a posztot?",
-      hint: "Az internet hosszú. Ha egyszer kint van, kint van.",
-      choices: [
-        { label: "Nem, teljesen rendben van",      style: "yes", next: "submit_outcome" },
-        { label: "Inkább ne lássák",               style: "no",  next: "privacy_outcome" }
-      ]
-    },
-    submit_outcome:    { outcome: true, type: "submit", title: "Rendben van — nyugodtan posztolhatod.",      body: "A posztod átment az ellenőrzésen. Nyugodt, konstruktív, és ki is állhatsz mellette. Posztolj magabiztosan." },
-    opinion_outcome:   { outcome: true, type: "cancel", title: "Fontold meg, hogy kihagyod ezt.",           body: "A politikai vélemények a közösségi médiában ritkán változtatnak meg senkit — főleg csak konfliktust szülnek. Kérdezd meg magadtól: van-e konstruktívabb mód ennek kifejezésére, vagy jobb helyszín erre a beszélgetésre?" },
-    antagonise_outcome:{ outcome: true, type: "cancel", title: "Várj ezzel.",                               body: "Még a tényszerű posztok is keretezhetők úgy, hogy provokálnak. Próbáld átírni úgy, hogy egy ellentétes nézetű személy is el tudja olvasni anélkül, hogy lesöpörtnek érezné magát. Ha ez lehetetlen, talán nem érdemes posztolni." },
-    attack_outcome:    { outcome: true, type: "cancel", title: "Ne poszold ezt.",                           body: "A személyes támadások — még közszereplőkkel szemben is — általában többet mondanak a posztolóról, mint a célpontról. Ha valódi mondanivalód van, hagyd el az érzelmeket és ragaszkodj a tényekhez." },
-    anger_outcome:     { outcome: true, type: "pause",  title: "Először lépj egyet hátra.",                 body: "A reaktív érzelmi állapotból posztolni szinte mindig megbánáshoz vezet. Írd le, ha ki kell adnod magadból — de mentsd el vázlatként, és egy óra múlva térj vissza. Lehet, hogy meglepődsz." },
-    cool_down_outcome: { outcome: true, type: "pause",  title: "Várj 10 percet, mielőtt posztolsz.",         body: "Nem vagy rossz, amiért így érzel — de most posztolni növeli annak kockázatát, hogy olyat mondj, amit később törölni akarsz. Állíts be egy időzítőt, csinálj valami mást, majd friss szemmel olvasd újra." },
-    vent_outcome:      { outcome: true, type: "cancel", title: "Ennek talán nem kell közönség.",            body: "A nyilvános panaszkodás pillanatnyilag felszabadítónak tűnhet, de sokszor negatív reakciókat vonz, vagy lemeríti a saját energiádat. Fontold meg a naplóírást, egy közeli barátot, vagy egyszerűen a nem posztolást." },
-    privacy_outcome:   { outcome: true, type: "cancel", title: "Ha elrejtenéd, ne oszd meg.",              body: "Érdemes hallgatni erre az ösztönre. Azok a posztok, amelyek átmennek a 'rendben lenne, ha bárki látná?' teszten, azok amelyeket szorongás nélkül posztolhatsz. Írd át vagy hagyd ki ezt." }
-  }
-};
-
-// ─── STATE ────────────────────────────────────────────────────────────────────
-const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-let lang = browserLang.startsWith('hu') ? 'hu' : 'en';
-let history = [];
-let currentNode = 'start';
-
-const steps = ["start","political_check","sourced","personal_attack","attack_check","emotional_state","anger_check","constructive","final_check"];
-
-function getProgress(nodeId) {
-  const idx = steps.indexOf(nodeId);
-  if (idx === -1) return 100;
-  return Math.round((idx / (steps.length - 1)) * 100);
-}
-
-function setLang(l) {
-  lang = l;
-  document.getElementById('btn-en').classList.toggle('active', l === 'en');
-  document.getElementById('btn-hu').classList.toggle('active', l === 'hu');
-  const t = ui[l];
-  document.getElementById('hdr-eyebrow').textContent = t.eyebrow;
-  document.getElementById('hdr-title').innerHTML = t.title;
-  document.getElementById('hdr-sub').textContent = t.sub;
-  document.getElementById('footer-text').textContent = t.footer;
-  render(currentNode);
-}
-
-function render(nodeId) {
-  currentNode = nodeId;
-  const node = trees[lang][nodeId];
-  const container = document.getElementById('card-container');
-  const progressEl = document.getElementById('progress');
-  const t = ui[lang];
-
-  if (node.outcome) {
-    progressEl.style.width = '100%';
-    const stampText = node.type === 'submit' ? t.stampSubmit : node.type === 'pause' ? t.stampPause : t.stampCancel;
-    container.innerHTML = `
-      <div class="card outcome">
-        <div class="stamp ${node.type}">${stampText}</div>
-        <div class="outcome-title">${node.title}</div>
-        <p class="outcome-body">${node.body}</p>
-        <button class="restart-btn" onclick="restart()">${t.restart}</button>
-      </div>`;
-    return;
-  }
-
-  progressEl.style.width = getProgress(nodeId) + '%';
-
-  const tripleClass = node.choices.length === 3 ? 'triple' : node.choices.length === 1 ? 'single' : '';
-  const choiceButtons = node.choices.map(c => `
-    <button class="btn-${c.style}" onclick="go('${c.next}', '${nodeId}')">
-      ${c.label}
-    </button>`).join('');
-
-  const backBtn = history.length > 0
-    ? `<button class="back-link" onclick="goBack()">← ${lang === 'hu' ? 'Vissza' : 'Go back'}</button>`
-    : '';
-
-  container.innerHTML = `
-    <div class="card">
-      <div class="step-label">${node.step}</div>
-      <div class="question">${node.question}</div>
-      <p class="hint">${node.hint}</p>
-      <div class="choices ${tripleClass}">${choiceButtons}</div>
-      ${backBtn}
-    </div>`;
-}
-
-function go(nodeId, fromId) {
-  history.push(fromId);
-  render(nodeId);
-}
-
-function goBack() {
-  const prev = history.pop();
-  if (prev) render(prev);
-}
-
-function restart() {
-  history = [];
-  render('start');
-}
-
-setLang(lang);
-</body>
+      setLang(lang);
+    </script>
+  </body>
 </html>
