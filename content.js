@@ -12,7 +12,8 @@ const ui = {
   hu: {
     title: "Gondold meg, <em>mielőtt</em> posztolsz",
     sub: "Adj értéket, ne zajt.",
-    footer: "Egy gyors útmutató, hogy a feedeed konstruktív és dráma-mentes maradjon.",
+    footer:
+      "Egy gyors útmutató, hogy a feedeed konstruktív és dráma-mentes maradjon.",
     stampSubmit: "✓ POSZTOLJ",
     stampPause: "⏸ VÁRJ",
     stampCancel: "✕ TÖRÖLD",
@@ -242,7 +243,7 @@ const trees = {
     start: {
       step: "1. lépés / 7",
       question:
-        "Ez a poszt politikai tartalmat tartalmaz, vagy véleményt politikusokról, pártokról, közpolitikáról?",
+        "A posztod politikai tartalmú, vagy politikusokról, pártokról, közpolitikáról fejez ki véleményt?",
       hint: "Ide tartoznak a választások, törvények, kormánydöntések és társadalmi viták is.",
       choices: [
         {
@@ -278,16 +279,16 @@ const trees = {
     sourced: {
       step: "3. lépés / 7",
       question:
-        "Érezheti-e úgy egy ellentétes nézetet valló, ésszerű személy, hogy ez a poszt megtámadja, kigúnyolja vagy megsérti őt?",
+        "Érezheti-e úgy egy ellentétes nézetet valló, ésszerű személy, hogy a posztod megtámadja, kigúnyolja vagy megsérti őt?",
       hint: "Képzeld el, hogy a leginkább politikailag különböző ismerősöd olvassa. Tiszteletlennek érezné?",
       choices: [
         {
-          label: "Nem, tiszteletteljes",
+          label: "Nem, tiszteletteljes a posztom",
           style: "yes",
           next: "constructive",
         },
         {
-          label: "Valószínűleg igen",
+          label: "Lehetséges",
           style: "no",
           next: "antagonise_outcome",
         },
@@ -296,11 +297,11 @@ const trees = {
     personal_attack: {
       step: "2. lépés / 7",
       question:
-        "Ez a poszt kritizál, kigúnyol vagy nevén nevez egy konkrét, valós személyt?",
+        "A poszt kritizál, kigúnyol vagy nevén nevez konkrét, valós személyt?",
       hint: "Ide tartoznak hírességek, politikusok, kollégák vagy bármely azonosítható személy.",
       choices: [
         {
-          label: "Nem, nem egy személyről szól",
+          label: "Nem, nem valós személyről szól",
           style: "yes",
           next: "emotional_state",
         },
@@ -323,7 +324,7 @@ const trees = {
           next: "emotional_state",
         },
         {
-          label: "Nem, inkább támadás vagy kirohanás",
+          label: "Nem tudom, csak valahol olvastam",
           style: "no",
           next: "attack_outcome",
         },
@@ -345,7 +346,7 @@ const trees = {
           next: "anger_check",
         },
         {
-          label: "😢 Felzaklatott vagy reaktív",
+          label: "😢 Felzaklatott vagy sértett",
           style: "no",
           next: "anger_outcome",
         },
@@ -353,16 +354,16 @@ const trees = {
     },
     anger_check: {
       step: "5. lépés / 7",
-      question: "Újraolvastál a posztot legalább 10 perces szünet után?",
+      question: "Újraolvastad a posztot egy legalább 10 perces szünet után?",
       hint: "Egy rövid szünet után sokszor egy élesebb, nyugodtabb változat kerül elő abból, amit valójában mondani akarsz.",
       choices: [
         {
-          label: "Igen, később újraolvastam",
+          label: "Igen, vártam és újraolvastam",
           style: "yes",
           next: "constructive",
         },
         {
-          label: "Nem, az adott pillanatban posztolnék",
+          label: "Nem, ebben a pillanatban posztolnék",
           style: "no",
           next: "cool_down_outcome",
         },
@@ -371,12 +372,12 @@ const trees = {
     constructive: {
       step: "6. lépés / 7",
       question:
-        "Ad-e ez a poszt valami hasznosat — betekintést, forrást, valódi kérdést vagy pozitív hírt?",
+        "Nyújt a posztod valami hasznosat — betekintést, forrást, valódi kérdést vagy pozitív hírt?",
       hint: "A tájékoztató, összekötő vagy felemelő tartalom általában jobban szolgálja a közönséget, mint a panaszkodás.",
       choices: [
         { label: "Igen, értéket ad", style: "yes", next: "final_check" },
         {
-          label: "Nem igazán — csak panasz",
+          label: "Nem igazán — főként panasz",
           style: "warn",
           next: "vent_outcome",
         },
@@ -385,7 +386,7 @@ const trees = {
     final_check: {
       step: "7. lépés / 7",
       question:
-        "Kényelmetlenül éreznéd-e magad, ha a munkáltatód, a családod vagy egy általad tisztelt személy látná ezt a posztot?",
+        "Kényelmetlenül éreznéd-e magad, ha a családod, munkáltatód vagy egy általad tisztelt személy látná ezt a posztot?",
       hint: "Az internet hosszú. Ha egyszer kint van, kint van.",
       choices: [
         {
@@ -403,32 +404,32 @@ const trees = {
     submit_outcome: {
       outcome: true,
       type: "submit",
-      title: "Rendben van — nyugodtan posztolhatod.",
+      title: "Rendben van — nyugodtan posztolhatsz.",
       body: "A posztod átment az ellenőrzésen. Nyugodt, konstruktív, és ki is állhatsz mellette. Posztolj magabiztosan.",
     },
     opinion_outcome: {
       outcome: true,
       type: "cancel",
       title: "Fontold meg, hogy kihagyod ezt.",
-      body: "A politikai vélemények a közösségi médiában ritkán változtatnak meg senkit — főleg csak konfliktust szülnek. Kérdezd meg magadtól: van-e konstruktívabb mód ennek kifejezésére, vagy jobb helyszín erre a beszélgetésre?",
+      body: "A politikai vélemények a közösségi médiában ritkán változtatnak meg bárkit — főleg csak konfliktust szülnek. Kérdezd meg magadtól: van-e konstruktívabb mód ennek kifejezésére, vagy jobb helyszín erre a beszélgetésre?",
     },
     antagonise_outcome: {
       outcome: true,
       type: "cancel",
       title: "Várj ezzel.",
-      body: "Még a tényszeri posztok is keretezhetők úgy, hogy provokálnak. Próbáld átírni úgy, hogy egy ellentétes nézetű személy is el tudja olvasni anélkül, hogy lesöpörtnek érezné magát. Ha ez lehetetlen, talán nem érdemes posztolni.",
+      body: "Még a tényszerű posztok is keretezhetők úgy, hogy provokálnak. Próbáld átírni úgy, hogy egy ellentétes nézetű személy is el tudja olvasni anélkül, hogy lesöpörtnek érezné magát. Ha ez lehetetlen, talán nem érdemes posztolni.",
     },
     attack_outcome: {
       outcome: true,
       type: "cancel",
-      title: "Ne poszold ezt.",
+      title: "Ne poszolj.",
       body: "A személyes támadások — még közszereplőkkel szemben is — általában többet mondanak a posztolóról, mint a célpontról. Ha valódi mondanivalód van, hagyd el az érzelmeket és ragaszkodj a tényekhez.",
     },
     anger_outcome: {
       outcome: true,
       type: "pause",
-      title: "Először lépj egyet hátra.",
-      body: "A reaktív érzelmi állapotból posztolni szinte mindig megbánáshoz vezet. Írd le, ha ki kell adnod magadból — de mentsd el vázlatként, és egy óra múlva térj vissza. Lehet, hogy meglepődsz.",
+      title: "Először végy egy nagy levegőt.",
+      body: "Sértett, vagy zaklatott érzelmi állapotból posztolni szinte mindig megbánáshoz vezet. Írd le, ha ki kell adnod magadból — de mentsd el vázlatként, és egy óra múlva térj vissza. Lehet, hogy meglepődsz.",
     },
     cool_down_outcome: {
       outcome: true,
@@ -440,7 +441,7 @@ const trees = {
       outcome: true,
       type: "cancel",
       title: "Ennek talán nem kell közönség.",
-      body: "A nyilvános panaszkodás pillanatnyilag felszabadítónak tűnhet, de sokszor negatív reakciókat vonz, vagy lemeríti a saját energiádat. Fontold meg a naplóírást, egy közeli barátot, vagy egyszerűen a nem posztolást.",
+      body: "A nyilvános panaszkodás pillanatnyilag felszabadítónak tűnhet, de sokszor negatív reakciókat vonz, vagy lemeríti a saját energiádat. Fontold meg a naplóírást, kérdezz meg egy közeli barátot, vagy egyszerűen hagyd ki a posztolást.",
     },
     privacy_outcome: {
       outcome: true,
