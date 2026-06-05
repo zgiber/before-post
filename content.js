@@ -1,6 +1,6 @@
 const ui = {
   en: {
-    title: "Post Before You <em>Post</em>",
+    title: "Pause Before You <em>Post</em>",
     sub: "Spread signal, not noise.",
     footer: "A quick guide to keeping your feed constructive and drama-free.",
     stampSubmit: "✓ SUBMIT",
