@@ -1,8 +1,8 @@
 const ui = {
   en: {
     title: "Post Before You <em>Post</em>",
-    sub: "A quick guide to keeping your feed constructive and drama-free.",
-    footer: "Think before you post · Spread signal, not noise",
+    sub: "Spread signal, not noise.",
+    footer: "A quick guide to keeping your feed constructive and drama-free.",
     stampSubmit: "✓ SUBMIT",
     stampPause: "⏸ PAUSE",
     stampCancel: "✕ CANCEL",
@@ -11,8 +11,8 @@ const ui = {
   },
   hu: {
     title: "Gondold meg, <em>mielőtt</em> posztolsz",
-    sub: "Egy gyors útmutató, hogy a feedeed konstruktív és dráma-mentes maradjon.",
-    footer: "Gondolkodj mielőtt posztolsz · Adj értéket, ne zajt",
+    sub: "Adj értéket, ne zajt.",
+    footer: "Egy gyors útmutató, hogy a feedeed konstruktív és dráma-mentes maradjon.",
     stampSubmit: "✓ POSZTOLJ",
     stampPause: "⏸ VÁRJ",
     stampCancel: "✕ TÖRÖLD",
