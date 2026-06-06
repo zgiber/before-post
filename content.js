@@ -1,8 +1,11 @@
+// UI strings live here. Title is a 3-part structure: plain, accent, plain.
+// The DOM renderer in app.js wraps the `accent` piece in <em>.
 const ui = {
   en: {
-    title: "Pause Before You <em>Post</em>",
+    title: { before: "Pause Before You ", accent: "Post", after: "" },
     sub: "Spread signal, not noise.",
     footer: "A quick guide to keeping your feed constructive and drama-free.",
+    step: "Step {n} of {m}",
     stampSubmit: "✓ SUBMIT",
     stampPause: "⏸ PAUSE",
     stampCancel: "✕ CANCEL",
@@ -10,10 +13,11 @@ const ui = {
     back: "← Go back",
   },
   hu: {
-    title: "Gondold meg, <em>mielőtt</em> posztolsz",
+    title: { before: "Gondold meg, ", accent: "mielőtt", after: " posztolsz" },
     sub: "Adj értéket, ne zajt.",
     footer:
       "Egy gyors útmutató, hogy a feedeed konstruktív és dráma-mentes maradjon.",
+    step: "{n}. lépés / {m}",
     stampSubmit: "✓ POSZTOLJ",
     stampPause: "⏸ VÁRJ",
     stampCancel: "✕ TÖRÖLD",
@@ -25,169 +29,84 @@ const ui = {
 const trees = {
   en: {
     start: {
-      step: "Step 1 of 7",
       question:
         "Does this post contain political content, or opinions about politicians, parties, or policies?",
       hint: "This includes elections, laws, government decisions, and social justice debates.",
       choices: [
-        {
-          label: "✅ No, it's not political",
-          style: "yes",
-          next: "personal_attack",
-        },
-        {
-          label: "⚠️ Yes, it's political",
-          style: "warn",
-          next: "political_check",
-        },
+        { label: "✅ No, it's not political", style: "yes", next: "personal_attack" },
+        { label: "⚠️ Yes, it's political", style: "warn", next: "political_check" },
       ],
     },
     political_check: {
-      step: "Step 2 of 7",
       question:
         "Are you sharing a verified fact, or your own opinion / reaction?",
       hint: "Facts can be checked and sourced. Opinions are personal interpretations — and tend to invite debate.",
       choices: [
-        {
-          label: "📰 A verified, sourced fact",
-          style: "neutral",
-          next: "sourced",
-        },
-        {
-          label: "💬 My opinion or reaction",
-          style: "warn",
-          next: "opinion_outcome",
-        },
+        { label: "📰 A verified, sourced fact", style: "neutral", next: "sourced" },
+        { label: "💬 My opinion or reaction", style: "warn", next: "opinion_outcome" },
       ],
     },
     sourced: {
-      step: "Step 3 of 7",
       question:
         "Could a reasonable person on the opposite side feel attacked, mocked, or insulted by this post?",
       hint: "Imagine your most politically different friend reading it. Would it make them feel disrespected?",
       choices: [
-        {
-          label: "No, it's respectful",
-          style: "yes",
-          next: "constructive",
-        },
-        {
-          label: "Probably yes",
-          style: "no",
-          next: "antagonise_outcome",
-        },
+        { label: "No, it's respectful", style: "yes", next: "constructive" },
+        { label: "Probably yes", style: "no", next: "antagonise_outcome" },
       ],
     },
     personal_attack: {
-      step: "Step 2 of 7",
       question:
         "Does this post criticise, mock, or call out a specific real person by name?",
       hint: "Includes celebrities, politicians, colleagues, or anyone identifiable.",
       choices: [
-        {
-          label: "No, it's not about a person",
-          style: "yes",
-          next: "emotional_state",
-        },
-        {
-          label: "Yes, it names someone",
-          style: "no",
-          next: "attack_check",
-        },
+        { label: "No, it's not about a person", style: "yes", next: "emotional_state" },
+        { label: "Yes, it names someone", style: "no", next: "attack_check" },
       ],
     },
     attack_check: {
-      step: "Step 3 of 7",
       question:
         "Is the criticism based on their public actions and accompanied by evidence?",
       hint: "Constructive critique of public figures is fair. Personal attacks and mockery rarely add value.",
       choices: [
-        {
-          label: "Yes, factual and evidenced",
-          style: "neutral",
-          next: "emotional_state",
-        },
-        {
-          label: "No, more of an attack or rant",
-          style: "no",
-          next: "attack_outcome",
-        },
+        { label: "Yes, factual and evidenced", style: "neutral", next: "emotional_state" },
+        { label: "No, more of an attack or rant", style: "no", next: "attack_outcome" },
       ],
     },
     emotional_state: {
-      step: "Step 4 of 7",
       question: "What's your emotional state right now?",
       hint: "Posts drafted in anger, frustration, or outrage often land differently than intended.",
       choices: [
-        {
-          label: "😌 Calm and measured",
-          style: "yes",
-          next: "constructive",
-        },
-        {
-          label: "😤 Frustrated or angry",
-          style: "warn",
-          next: "anger_check",
-        },
-        {
-          label: "😢 Upset or reactive",
-          style: "no",
-          next: "anger_outcome",
-        },
+        { label: "😌 Calm and measured", style: "yes", next: "constructive" },
+        { label: "😤 Frustrated or angry", style: "warn", next: "anger_check" },
+        { label: "😢 Upset or reactive", style: "no", next: "anger_outcome" },
       ],
     },
     anger_check: {
-      step: "Step 5 of 7",
       question:
         "Have you re-read this post after stepping away for at least 10 minutes?",
       hint: "A short pause often reveals a sharper, calmer version of what you actually want to say.",
       choices: [
-        {
-          label: "Yes, I reviewed it later",
-          style: "yes",
-          next: "constructive",
-        },
-        {
-          label: "No, posting in the moment",
-          style: "no",
-          next: "cool_down_outcome",
-        },
+        { label: "Yes, I reviewed it later", style: "yes", next: "constructive" },
+        { label: "No, posting in the moment", style: "no", next: "cool_down_outcome" },
       ],
     },
     constructive: {
-      step: "Step 6 of 7",
       question:
         "Does this post add something useful — insight, a resource, a genuine question, or positive news?",
       hint: "Content that informs, connects, or uplifts tends to serve your audience better than venting.",
       choices: [
-        {
-          label: "Yes, it adds value",
-          style: "yes",
-          next: "final_check",
-        },
-        {
-          label: "Not really — just venting",
-          style: "warn",
-          next: "vent_outcome",
-        },
+        { label: "Yes, it adds value", style: "yes", next: "final_check" },
+        { label: "Not really — just venting", style: "warn", next: "vent_outcome" },
       ],
     },
     final_check: {
-      step: "Step 7 of 7",
       question:
         "Would you be comfortable if your employer, family, or anyone you respect saw this post?",
       hint: "The internet is long. Once it's out, it's out.",
       choices: [
-        {
-          label: "Yes, completely fine",
-          style: "yes",
-          next: "submit_outcome",
-        },
-        {
-          label: "I'd rather they didn't",
-          style: "no",
-          next: "privacy_outcome",
-        },
+        { label: "Yes, completely fine", style: "yes", next: "submit_outcome" },
+        { label: "I'd rather they didn't", style: "no", next: "privacy_outcome" },
       ],
     },
     submit_outcome: {
@@ -241,164 +160,84 @@ const trees = {
   },
   hu: {
     start: {
-      step: "1. lépés / 7",
       question:
         "A posztod politikai tartalmú, vagy politikusokról, pártokról, közpolitikáról fejez ki véleményt?",
       hint: "Ide tartoznak a választások, törvények, kormánydöntések és társadalmi viták is.",
       choices: [
-        {
-          label: "✅ Nem, nem politikai",
-          style: "yes",
-          next: "personal_attack",
-        },
-        {
-          label: "⚠️ Igen, politikai témájú",
-          style: "warn",
-          next: "political_check",
-        },
+        { label: "✅ Nem, nem politikai", style: "yes", next: "personal_attack" },
+        { label: "⚠️ Igen, politikai témájú", style: "warn", next: "political_check" },
       ],
     },
     political_check: {
-      step: "2. lépés / 7",
       question:
         "Ellenőrzött tényt osztasz meg, vagy a saját véleményedet / reakciódat?",
       hint: "A tények utánanézhetők és forrásokkal alátámaszthatók. A vélemények személyes értelmezések — és általában vitát szülnek.",
       choices: [
-        {
-          label: "📰 Ellenőrzött, forrással alátámasztott tény",
-          style: "neutral",
-          next: "sourced",
-        },
-        {
-          label: "💬 A saját véleményem vagy reakcióm",
-          style: "warn",
-          next: "opinion_outcome",
-        },
+        { label: "📰 Ellenőrzött, forrással alátámasztott tény", style: "neutral", next: "sourced" },
+        { label: "💬 A saját véleményem vagy reakcióm", style: "warn", next: "opinion_outcome" },
       ],
     },
     sourced: {
-      step: "3. lépés / 7",
       question:
         "Érezheti-e úgy egy ellentétes nézetet valló, ésszerű személy, hogy a posztod megtámadja, kigúnyolja vagy megsérti őt?",
       hint: "Képzeld el, hogy a leginkább politikailag különböző ismerősöd olvassa. Tiszteletlennek érezné?",
       choices: [
-        {
-          label: "Nem, tiszteletteljes a posztom",
-          style: "yes",
-          next: "constructive",
-        },
-        {
-          label: "Lehetséges",
-          style: "no",
-          next: "antagonise_outcome",
-        },
+        { label: "Nem, tiszteletteljes a posztom", style: "yes", next: "constructive" },
+        { label: "Lehetséges", style: "no", next: "antagonise_outcome" },
       ],
     },
     personal_attack: {
-      step: "2. lépés / 7",
       question:
         "A poszt kritizál, kigúnyol vagy nevén nevez konkrét, valós személyt?",
       hint: "Ide tartoznak hírességek, politikusok, kollégák vagy bármely azonosítható személy.",
       choices: [
-        {
-          label: "Nem, nem valós személyről szól",
-          style: "yes",
-          next: "emotional_state",
-        },
-        {
-          label: "Igen, megnevez valakit",
-          style: "no",
-          next: "attack_check",
-        },
+        { label: "Nem, nem valós személyről szól", style: "yes", next: "emotional_state" },
+        { label: "Igen, megnevez valakit", style: "no", next: "attack_check" },
       ],
     },
     attack_check: {
-      step: "3. lépés / 7",
       question:
         "A kritika az illető nyilvános cselekedetein alapul, és bizonyítékkal is alátámasztott?",
       hint: "Közszereplők konstruktív bírálata jogos. A személyes támadások és gúnyolódás ritkán adnak hozzá bármit.",
       choices: [
-        {
-          label: "Igen, tényszerű és bizonyított",
-          style: "neutral",
-          next: "emotional_state",
-        },
-        {
-          label: "Nem tudom, csak valahol olvastam",
-          style: "no",
-          next: "attack_outcome",
-        },
+        { label: "Igen, tényszerű és bizonyított", style: "neutral", next: "emotional_state" },
+        // Intentionally softer than EN: people don't self-report as attackers.
+        { label: "Nem tudom, csak valahol olvastam", style: "no", next: "attack_outcome" },
       ],
     },
     emotional_state: {
-      step: "4. lépés / 7",
       question: "Milyen érzelmi állapotban vagy most?",
       hint: "A dühből, frusztrációból vagy felháborodásból írt posztok gyakran másképp hatnak, mint szántuk.",
       choices: [
-        {
-          label: "😌 Nyugodt és megfontolt",
-          style: "yes",
-          next: "constructive",
-        },
-        {
-          label: "😤 Frusztrált vagy mérges",
-          style: "warn",
-          next: "anger_check",
-        },
-        {
-          label: "😢 Felzaklatott vagy sértett",
-          style: "no",
-          next: "anger_outcome",
-        },
+        { label: "😌 Nyugodt és megfontolt", style: "yes", next: "constructive" },
+        { label: "😤 Frusztrált vagy mérges", style: "warn", next: "anger_check" },
+        { label: "😢 Felzaklatott vagy sértett", style: "no", next: "anger_outcome" },
       ],
     },
     anger_check: {
-      step: "5. lépés / 7",
       question: "Újraolvastad a posztot egy legalább 10 perces szünet után?",
       hint: "Egy rövid szünet után sokszor egy élesebb, nyugodtabb változat kerül elő abból, amit valójában mondani akarsz.",
       choices: [
-        {
-          label: "Igen, vártam és újraolvastam",
-          style: "yes",
-          next: "constructive",
-        },
-        {
-          label: "Nem, ebben a pillanatban posztolnék",
-          style: "no",
-          next: "cool_down_outcome",
-        },
+        { label: "Igen, vártam és újraolvastam", style: "yes", next: "constructive" },
+        { label: "Nem, ebben a pillanatban posztolnék", style: "no", next: "cool_down_outcome" },
       ],
     },
     constructive: {
-      step: "6. lépés / 7",
       question:
         "Nyújt a posztod valami hasznosat — betekintést, forrást, valódi kérdést vagy pozitív hírt?",
       hint: "A tájékoztató, összekötő vagy felemelő tartalom általában jobban szolgálja a közönséget, mint a panaszkodás.",
       choices: [
         { label: "Igen, értéket ad", style: "yes", next: "final_check" },
-        {
-          label: "Nem igazán — főként panasz",
-          style: "warn",
-          next: "vent_outcome",
-        },
+        { label: "Nem igazán — főként panasz", style: "warn", next: "vent_outcome" },
       ],
     },
     final_check: {
-      step: "7. lépés / 7",
       question:
         "Kényelmetlenül éreznéd-e magad, ha a családod, munkáltatód vagy egy általad tisztelt személy látná ezt a posztot?",
       hint: "Az internet hosszú. Ha egyszer kint van, kint van.",
       choices: [
-        {
-          label: "Nem, teljesen rendben van",
-          style: "yes",
-          next: "submit_outcome",
-        },
-        {
-          label: "Inkább ne lássák",
-          style: "no",
-          next: "privacy_outcome",
-        },
+        { label: "Nem, teljesen rendben van", style: "yes", next: "submit_outcome" },
+        { label: "Inkább ne lássák", style: "no", next: "privacy_outcome" },
       ],
     },
     submit_outcome: {

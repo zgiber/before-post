@@ -10,24 +10,18 @@
   <body>
     <div class="page">
       <div class="lang-toggle">
-        <button class="lang-btn active" id="btn-en" onclick="setLang('en')">
-          EN
-        </button>
-        <button class="lang-btn" id="btn-hu" onclick="setLang('hu')">HU</button>
+        <button class="lang-btn" id="btn-en" type="button">EN</button>
+        <button class="lang-btn" id="btn-hu" type="button">HU</button>
       </div>
       <header>
-        <h1 id="hdr-title">Post Before You <em>Post</em></h1>
-        <p id="hdr-sub">
-          A quick guide to keeping your feed constructive and drama-free.
-        </p>
+        <h1 id="hdr-title">Pause Before You <em>Post</em></h1>
+        <p id="hdr-sub">Spread signal, not noise.</p>
       </header>
       <div class="progress-bar">
         <div class="progress-fill" id="progress" style="width: 0%"></div>
       </div>
       <div id="card-container"></div>
-      <footer id="footer-text">
-        Think before you post · Spread signal, not noise
-      </footer>
+      <footer id="footer-text">A quick guide to keeping your feed constructive and drama-free.</footer>
     </div>
     <script src="content.js"></script>
     <script src="app.js"></script>
