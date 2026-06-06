@@ -5,7 +5,6 @@ const ui = {
     title: { before: "Pause Before You ", accent: "Post", after: "" },
     sub: "Spread signal, not noise.",
     footer: "A quick guide to keeping your feed constructive and drama-free.",
-    step: "Step {n} of {m}",
     stampSubmit: "✓ SUBMIT",
     stampPause: "⏸ PAUSE",
     stampCancel: "✕ CANCEL",
@@ -17,7 +16,6 @@ const ui = {
     sub: "Adj értéket, ne zajt.",
     footer:
       "Egy gyors útmutató, hogy a feedeed konstruktív és dráma-mentes maradjon.",
-    step: "{n}. lépés / {m}",
     stampSubmit: "✓ POSZTOLJ",
     stampPause: "⏸ VÁRJ",
     stampCancel: "✕ TÖRÖLD",

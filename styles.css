@@ -121,14 +121,6 @@ header p {
   }
 }
 
-.step-label {
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.6rem;
-}
 .question {
   font-family: "Poppins", sans-serif;
   font-weight: 700;

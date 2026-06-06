@@ -1,7 +1,6 @@
 // The decision tree per language lives in `trees[lang]` (see content.js).
-// Every user-traversable question step appears in `history` indirectly: each
-// entry is the *previous* node we left, so the full path is reconstructable
-// by walking currentNode backwards through history and prepending it.
+// `history` records the user's path: history[i] is the node we were at when
+// we chose to go to history[i+1] (or currentNode for the last entry).
 //
 // This file owns state and DOM rendering; it does not own any user-visible
 // strings.
@@ -10,44 +9,51 @@ let lang = (navigator.language || "en").toLowerCase().startsWith("hu") ? "hu" : 
 let history = [];
 let currentNode = "start";
 
-// --- path / progress ---
+// --- progress ---
 
-// Reconstruct the user's path from start to currentNode, including the
-// outcome node if we've reached one.
-function buildPath() {
-  // history[i] is the node we were at when we chose to go to history[i+1].
-  // So: history[0] is what came before "start" (nothing), and for i >= 1,
-  // history[i] is the previous node. Reverse-walk to prepend.
-  const path = [currentNode];
-  for (let i = history.length - 1; i >= 0; i--) path.push(history[i]);
-  return path.reverse();
+// Min steps to an outcome from any node, per language. Computed once per
+// language with BFS. Outcome nodes map to 0.
+const minToOutcome = {};
+
+// BFS over the decision tree, treating each non-outcome node as expanding
+// to its choices' `next` targets. Outcomes are sinks (0).
+function computeMinStepsToOutcome(tree) {
+  const dist = {};
+  const queue = [];
+  for (const [id, node] of Object.entries(tree)) {
+    if (node.outcome) {
+      dist[id] = 0;
+      queue.push(id);
+    }
+  }
+  while (queue.length) {
+    const id = queue.shift();
+    // Walk edges in reverse: from any node whose choice points here, push
+    // dist[id]+1.
+    for (const [candId, cand] of Object.entries(tree)) {
+      if (dist[candId] !== undefined) continue;
+      if (!cand.choices) continue;
+      if (cand.choices.some((c) => c.next === id) && dist[id] !== undefined) {
+        dist[candId] = dist[id] + 1;
+        queue.push(candId);
+      }
+    }
+  }
+  return dist;
 }
 
-function stepIndex(nodeId) {
-  const path = buildPath();
-  const idx = path.indexOf(nodeId);
-  return idx === -1 ? 0 : idx;
-}
-
-function stepCount() {
-  // Only question steps count toward "Step N of M"; outcomes don't.
-  return buildPath().filter((id) => !trees[lang][id].outcome).length;
-}
-
-function stepLabel(nodeId) {
-  const t = ui[lang];
-  const path = buildPath();
-  const idx = path.indexOf(nodeId);
-  if (idx === -1) return "";
-  return t.step.replace("{n}", String(idx + 1)).replace("{m}", String(stepCount()));
-}
-
-function getProgress(nodeId) {
-  const node = trees[lang][nodeId];
-  if (!node || node.outcome) return 100;
-  const total = stepCount();
-  if (total <= 1) return 100;
-  return Math.round((stepIndex(nodeId) / (total - 1)) * 100);
+// stepsDone / (stepsDone + min steps from current node to an outcome).
+// 0% at start, 100% at any outcome. Monotonic in stepsDone; can plateau
+// or briefly tick down if a branch you picked has a longer min-path than
+// the one you left.
+function getProgress() {
+  if (history.length === 0) return 0;
+  const node = trees[lang][currentNode];
+  if (node && node.outcome) return 100;
+  const minFromHere = minToOutcome[lang][currentNode] ?? 0;
+  const total = history.length + minFromHere;
+  if (total === 0) return 0;
+  return Math.round((history.length / total) * 100);
 }
 
 // --- DOM construction (no innerHTML, no string interpolation) ---
@@ -80,7 +86,6 @@ function renderTitle(container) {
 function renderQuestionCard(container, node) {
   const t = ui[lang];
   const card = el("div", { class: "card" });
-  card.appendChild(el("div", { class: "step-label", text: stepLabel(currentNode) }));
   card.appendChild(el("div", { class: "question", text: node.question }));
   card.appendChild(el("p", { class: "hint", text: node.hint }));
 
@@ -141,10 +146,11 @@ function render() {
   container.replaceChildren();
   if (node.outcome) renderOutcomeCard(container, node);
   else renderQuestionCard(container, node);
-  document.getElementById("progress").style.width = getProgress(currentNode) + "%";
+  document.getElementById("progress").style.width = getProgress() + "%";
 }
 
 function setLang(l) {
+  if (!minToOutcome[l]) minToOutcome[l] = computeMinStepsToOutcome(trees[l]);
   lang = l;
   document.getElementById("btn-en").classList.toggle("active", l === "en");
   document.getElementById("btn-hu").classList.toggle("active", l === "hu");
